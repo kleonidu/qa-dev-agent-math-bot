@@ -1,0 +1,12 @@
+safe_mode: true          # по умолчанию — только Draft PR
+create_issue_always: true
+apply_changes: false     # можно переопределить флагом CLI --apply
+render_autodeploy: false
+pr_title_prefix: "QA:"
+branch_prefix: "qa/dev-agent/"
+patch_allowlist:
+  - prompts/bot_system.md
+  - config.yaml
+report:
+  save_json: true
+  save_md: true
