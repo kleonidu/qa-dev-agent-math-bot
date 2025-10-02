@@ -1,0 +1,12 @@
+name: smoke_socratic
+mode: socratic
+steps:
+  - user: "Реши: 2x + 3 = 7."
+    expect_regex: "x\s*=\s*2"
+  - user: "Объясни шаги кратко."
+    expect_regex: "перенос|вычит"
+  - user: "Покажи похожую задачу"
+    expect_regex: "попробуй|аналог"
+limits:
+  max_steps: 3
+  max_time_sec: 60
