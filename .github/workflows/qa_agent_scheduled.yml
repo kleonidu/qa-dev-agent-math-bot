@@ -1,0 +1,35 @@
+name: QA+Dev Agent (scheduled)
+
+on:
+  schedule:
+    - cron: '0 6 * * *'   # каждый день в 06:00 UTC (~08:00 Europe/Vienna зимой)
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  run-matrix:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        plan: [ 'tests/plan_smoke.yaml', 'tests/plan_exam.yaml' ]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install deps
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+      - name: Run agent (no apply)
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_REPO: ${{ github.repository }}
+          BOT_SYSTEM_PROMPT_PATH: prompts/bot_system.md
+        run: |
+          python agent.py --plan ${{ matrix.plan }}
